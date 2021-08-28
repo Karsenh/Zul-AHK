@@ -30,7 +30,7 @@ RandomizeVariance() {
     ; Mouse Location (x,y Coordinate) Variance
     Random, rMouseCoordVar, 2, 6
     ; Mouse Movement Speed variance - FLOAT?
-    Random, rMouseSpeedVar, 1.75, 2.0
+    Random, rMouseSpeedVar, 1.4, 1.6
     ; Mouse Click Speed variance - INT
     Random rClickSpeedVar, 0.25, 1.25
     ; Random MS sleep time
@@ -39,75 +39,6 @@ RandomizeVariance() {
     randomNums := Object("rMouseCoordVar", rMouseCoordVar, "rMouseSpeedVar", rMouseSpeedVar, "rClickSpeedVar", rClickSpeedVar, "rSleepTimeVar", rSleepTime)
 
 return randomNums 
-}
-
-; PRAY against MAGE
-ProtMage() {
-
-    randomVariance := RandomizeVariance()
-    global prayerCoords
-
-    rCoordVariance := randomVariance["rMouseCoordVar"]
-    rMoveSpeed := randomVariance["rMouseSpeedVar"]
-    rSleepTimer := randomVariance["rSleepTimeVar"]
-
-    ; MAGE Pray Coords
-    mageCoordX := prayerCoords[1]["protMageX"]
-    mageCoordY := prayerCoords[1]["protMageY"]
-
-    ; RIGOUR Coords
-    rigCoordX := prayerCoords[2]["prayRigX"]
-    rigCoordY := prayerCoords[2]["prayRigY"]
-
-    ; Hotkey open Prayer tab
-    Send, {F4}
-
-    ; Pray Magic
-    MouseMove, mageCoordX+rCoordVariance, mageCoordY+rCoordVariance, rMoveSpeed
-    MouseClick, Left
-
-    ; Pray Rigour
-    MouseMove, rigCoordX+rCoordVariance, rigCoordY+rCoordVariance, rMoveSpeed
-    MouseClick, Left
-
-    Sleep, rSleepTimer
-    Send, {F1}
-
-return 
-}
-
-; PRAY against RANGE
-ProtRange(){
-    randomVariance := RandomizeVariance()
-    global prayerCoords
-
-    rCoordVariance := randomVariance["rMouseCoordVar"]
-    rMoveSpeed := randomVariance["rMouseSpeedVar"]
-    rSleepTimer := randomVariance["rSleepTimeVar"]
-
-    ; MAGE Pray Coords
-    rangeCoordX := prayerCoords[1]["protRangeX"]
-    rangeCoordY := prayerCoords[1]["protRangeY"]
-
-    ; RIGOUR Coords
-    augCoordX := prayerCoords[2]["prayAugX"]
-    augCoordY := prayerCoords[2]["prayAugY"]
-
-    ; Hotkey open Prayer tab
-    Send, {F4}
-
-    ; Pray Magic
-    MouseMove, rangeCoordX+rCoordVariance, rangeCoordY+rCoordVariance, rMoveSpeed
-    MouseClick, Left
-
-    ; Pray Rigour
-    MouseMove, augCoordX+rCoordVariance, augCoordY+rCoordVariance, rMoveSpeed
-    MouseClick, Left
-
-    Sleep, rSleepTimer
-    Send, {F1}
-
-return 
 }
 
 ; #################
@@ -135,6 +66,79 @@ Numpad9::
 
 return
 
+; PRAY against MAGE
+ProtMage() {
+
+    randomVariance := RandomizeVariance()
+    Random, adtlRandomVariance, 0.5, 2.0
+
+    global prayerCoords
+
+    rCoordVariance := randomVariance["rMouseCoordVar"]
+    rMoveSpeed := randomVariance["rMouseSpeedVar"]
+    rSleepTimer := randomVariance["rSleepTimeVar"]
+
+    ; MAGE Pray Coords
+    mageCoordX := prayerCoords[1]["protMageX"]
+    mageCoordY := prayerCoords[1]["protMageY"]
+
+    ; RIGOUR Coords
+    rigCoordX := prayerCoords[2]["prayRigX"]
+    rigCoordY := prayerCoords[2]["prayRigY"]
+
+    ; Hotkey open Prayer tab
+    Send, {F4}
+
+    ; Pray Magic
+    MouseMove, mageCoordX+rCoordVariance, mageCoordY+rCoordVariance, rMoveSpeed+adtlRandomVariance
+    MouseClick, Left
+
+    ; Pray Rigour
+    MouseMove, rigCoordX+rCoordVariance, rigCoordY+rCoordVariance, rMoveSpeed+adtlRandomVariance
+    MouseClick, Left
+
+    Sleep, rSleepTimer
+    Send, {F1}
+
+return 
+}
+
+; PRAY against RANGE
+ProtRange(){
+    randomVariance := RandomizeVariance()
+    Random, adtlRandomVariance, 0.5, 2.0
+
+    global prayerCoords
+
+    rCoordVariance := randomVariance["rMouseCoordVar"]
+    rMoveSpeed := randomVariance["rMouseSpeedVar"]
+    rSleepTimer := randomVariance["rSleepTimeVar"]
+
+    ; MAGE Pray Coords
+    rangeCoordX := prayerCoords[1]["protRangeX"]
+    rangeCoordY := prayerCoords[1]["protRangeY"]
+
+    ; RIGOUR Coords
+    augCoordX := prayerCoords[2]["prayAugX"]
+    augCoordY := prayerCoords[2]["prayAugY"]
+
+    ; Hotkey open Prayer tab
+    Send, {F4}
+
+    ; Pray Magic
+    MouseMove, rangeCoordX+rCoordVariance, rangeCoordY+rCoordVariance, rMoveSpeed+adtlRandomVariance
+    MouseClick, Left
+
+    ; Pray Rigour
+    MouseMove, augCoordX+rCoordVariance, augCoordY+rCoordVariance, rMoveSpeed+adtlRandomVariance
+    MouseClick, Left
+
+    Sleep, rSleepTimer
+    Send, {F1}
+
+return 
+}
+
 ; RANGE GEAR | Prot Mage (Mage form)
 Numpad8::
 
@@ -147,7 +151,7 @@ Numpad8::
     totalIterations := inventCoords.Length()
 
     for i in inventCoords {
-        Random, adtlRandomVariance, 0.5, 2.0
+        Random, adtlRandomVariance, 0.25, .75
         if (i != 4) {
             MouseMove, inventCoords[i]["itemX"]+rCoordVar, inventCoords[i]["itemY"]+rCoordVar, rMoveSpeed+adtlRandomVariance
             MouseClick, Left
@@ -168,7 +172,7 @@ Numpad7::
     totalIterations := inventCoords.Length()
 
     for i in inventCoords {
-        Random, adtlRandomVariance, 0.5, 2.0
+        Random, adtlRandomVariance, 0.25, .75
 
         MouseMove, inventCoords[i]["itemX"]+rCoordVar, inventCoords[i]["itemY"]+rCoordVar, rMoveSpeed+adtlRandomVariance
         MouseClick, Left
@@ -179,11 +183,11 @@ return
 
 ; Toggle Prot Magic | Rigour
 ^Numpad7::
-    ProtMage()
+    ProtRange()
 return
 
 ; Toggle Prot Range | Aug
 ^Numpad8::
-    ProtRange()
+    ProtMage()
 return
 
