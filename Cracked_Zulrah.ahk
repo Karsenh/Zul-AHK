@@ -30,7 +30,7 @@ RandomizeVariance() {
     ; Mouse Location (x,y Coordinate) Variance
     Random, rMouseCoordVar, 2, 6
     ; Mouse Movement Speed variance - FLOAT?
-    Random, rMouseSpeedVar, 1.4, 1.6
+    Random, rMouseSpeedVar, 1.2, 1.5
     ; Mouse Click Speed variance - INT
     Random rClickSpeedVar, 0.25, 1.25
     ; Random MS sleep time
@@ -46,7 +46,7 @@ return randomNums
 ; #################
 
 ; SET MOUSE COORDS - Gets current mousePos and sets the rest with a hard-coded offset
-Numpad9::
+NumpadEnter::
     inventCoords := []
     prayerCoords := []
     MouseGetPos, currX, currY
@@ -68,9 +68,10 @@ return
 
 ; PRAY against MAGE
 ProtMage() {
+    BlockInput, On
 
     randomVariance := RandomizeVariance()
-    Random, adtlRandomVariance, 0.5, 2.0
+    Random, adtlRandomVariance, 1.1, 1.9
 
     global prayerCoords
 
@@ -99,14 +100,16 @@ ProtMage() {
 
     Sleep, rSleepTimer
     Send, {F1}
+    BlockInput, Off
 
 return 
 }
 
 ; PRAY against RANGE
 ProtRange(){
+    BlockInput, On
     randomVariance := RandomizeVariance()
-    Random, adtlRandomVariance, 0.5, 2.0
+    Random, adtlRandomVariance, 1.1, 1.9
 
     global prayerCoords
 
@@ -135,13 +138,14 @@ ProtRange(){
 
     Sleep, rSleepTimer
     Send, {F1}
+    BlockInput, Off
 
 return 
 }
 
 ; RANGE GEAR | Prot Mage (Mage form)
 Numpad8::
-
+    BlockInput, On
     randomVars := RandomizeVariance()
 
     ; debugRandomVarianceObject(randomVars)
@@ -159,11 +163,14 @@ Numpad8::
     }
 
     ProtMage()
+    BlockInput, Off
 
 return 
 
 ; MAGIC GEAR | Prot Range (Melee/Range form)
 Numpad7::
+    BlockInput, On
+
     randomVars := RandomizeVariance()
 
     rCoordVar := randomVars["rMouseCoordVar"]
@@ -179,15 +186,22 @@ Numpad7::
     }
 
     ProtRange()
+    BlockInput, Off
+
 return 
 
 ; Toggle Prot Magic | Rigour
 ^Numpad7::
+    BlockInput, On
     ProtRange()
+    BlockInput, Off
+
 return
 
 ; Toggle Prot Range | Aug
 ^Numpad8::
+    BlockInput, On
     ProtMage()
+    BlockInput, Off
 return
 
