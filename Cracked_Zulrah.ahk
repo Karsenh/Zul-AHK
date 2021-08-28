@@ -9,6 +9,9 @@ inventCoords := []
 prayerCoords := Array()
 prayerCoords := []
 
+antiVenomCoords := Array()
+antiVenomCoords := []
+
 ; #################
 ; HELPER FUNCTIONS
 ; #################
@@ -58,6 +61,9 @@ NumpadEnter::
     inventCoords.Push({ "itemX": currX+45, "itemY": currY })
     inventCoords.Push({ "itemX": currX+45, "itemY": currY+35 })
     inventCoords.Push({ "itemX": currX+45, "itemY": currY+65 })
+
+    ; inventory coords for anti-venom
+    antiVenomCoords.Push({ "antiVenomX": currX+120, "antiVenomY": currY+35 })
 
     ; Protection prayer Coordinates
     prayerCoords.Push({ "protMageX": currX+15, "protMageY": currY+110, "protRangeX": currX+45, "protRangeY": currY+110 })
@@ -190,18 +196,75 @@ Numpad7::
 
 return 
 
-; Toggle Prot Magic | Rigour
-^Numpad7::
+; Toggle Prayer: Prot Magic | Rigour
+Numpad4::
     BlockInput, On
     ProtRange()
     BlockInput, Off
 
 return
 
-; Toggle Prot Range | Aug
-^Numpad8::
+; Toggle Prayer: Prot Range | Aug
+Numpad5::
     BlockInput, On
     ProtMage()
     BlockInput, Off
 return
 
+; Sip Anti-venom
+NumpadAdd::
+    BlockInput, On
+    global antiVenomCoords
+    randomVars := RandomizeVariance()
+
+    rCoordVar := randomVars["rMouseCoordVar"]
+    rMoveSpeed := randomVars["rMouseSpeedVar"]
+
+    ; MsgBox, % "Moving mouse to XY pos: " antiVenomCoords[1]["antiVenomX"] " " antiVenomCoords[1]["antiVenomY"]
+
+    MouseMove, antiVenomCoords[1]["antiVenomX"]+rCoordVar, antiVenomCoords[1]["antiVenomY"]+rCoordVar, rMoveSpeed
+    MouseClick, Left
+    BlockInput, Off
+return
+
+; Switch to Magic gear
+Numpad1::
+    BlockInput, On
+
+    randomVars := RandomizeVariance()
+
+    rCoordVar := randomVars["rMouseCoordVar"]
+    rMoveSpeed := randomVars["rMouseSpeedVar"]
+
+    totalIterations := inventCoords.Length()
+
+    for i in inventCoords {
+        Random, adtlRandomVariance, 0.25, .75
+
+        MouseMove, inventCoords[i]["itemX"]+rCoordVar, inventCoords[i]["itemY"]+rCoordVar, rMoveSpeed+adtlRandomVariance
+        MouseClick, Left
+    }
+    BlockInput, Off
+
+return
+
+; Switch to Range gear
+Numpad2::
+    BlockInput, On
+    randomVars := RandomizeVariance()
+
+    ; debugRandomVarianceObject(randomVars)
+    rCoordVar := randomVars["rMouseCoordVar"]
+    rMoveSpeed := randomVars["rMouseSpeedVar"]
+
+    totalIterations := inventCoords.Length()
+
+    for i in inventCoords {
+        Random, adtlRandomVariance, 0.25, .75
+        if (i != 4) {
+            MouseMove, inventCoords[i]["itemX"]+rCoordVar, inventCoords[i]["itemY"]+rCoordVar, rMoveSpeed+adtlRandomVariance
+            MouseClick, Left
+        }
+    }
+    BlockInput, Off
+return
