@@ -21,6 +21,7 @@ debugRandomVarianceObject(testObject) {
     MsgBox, % "Test Object rMouseCoordVar = " testObject["rMouseCoordVar"]
     MsgBox, % "Test Object rMouseSpeedVar = " testObject["rMouseSpeedVar"]
     MsgBox, % "Test Object rClickSpeedVar = " testObject["rClickSpeedVar"]
+    return
 }
 
 ; DEBUGGING - Get Raw Mouse Coordinates
@@ -70,7 +71,7 @@ setAllMouseCoords() {
     prayerCoords.Push({ "prayRigX": currX+65, "prayRigY": currY+185, "prayAugX": currX+95, "prayAugY": currY+185 })
 
     ; MsgBox, % "Mouse Coords Set: " inventCoords[1]["itemX"]
-
+return
 }
 
 ; RIG (with MAGE pray)
@@ -97,10 +98,12 @@ PrayRig() {
 
     ; Return to inventory
     Send, {F1}
+return
 }
 
 ; AUGURY mage prayer (with RANGE pray)
 PrayAug() {
+
     global prayerCoords
 
     randomVariance := RandomizeVariance()
@@ -124,10 +127,12 @@ PrayAug() {
     ; Return to inventory
     Send, {F1}
 
+return
 }
 
 ; MAGE PRAY
 ProtMage() {
+
     global prayerCoords
 
     ; MsgBox, % "Global PrayerCoords = " prayerCoords[1]["protMageX"] " " prayerCoords[1]["protMageY"]
@@ -156,11 +161,13 @@ ProtMage() {
 
     ; Return to inventory
     Send, {F1}
+
 return 
 }
 
 ; RANGE PRAY
 ProtRange(){
+
     global prayerCoords
 
     randomVariance := RandomizeVariance()
@@ -188,6 +195,7 @@ return
 }
 
 switchToRangeGear() {
+
     global inventCoords
 
     randomVars := RandomizeVariance()
@@ -208,10 +216,12 @@ switchToRangeGear() {
             MouseClick, Left
         }
     }
+
 return
 }
 
 switchToMagicGear() {
+
     global inventCoords
 
     randomVars := RandomizeVariance()
@@ -230,9 +240,12 @@ switchToMagicGear() {
         MouseMove, inventCoords[i]["itemX"]+rCoordVar, inventCoords[i]["itemY"]+rCoordVar, rMoveSpeed+adtlRandomVariance
         MouseClick, Left
     }
+
+return
 }
 
 antiVenomSippy() {
+
     global inventCoords
 
     randomVars := RandomizeVariance()
@@ -247,19 +260,13 @@ antiVenomSippy() {
 
     MouseMove, antiVenomPosX, antiVenomPosY, rMoveSpeed
     MouseClick, Left
+
+return
 }
 
 ; #################
 ; HOTKEY BINDINGS
 ; #################
-
-NumpadEnter::
-
-return
-
-NumpadAdd::
-
-return
 
 ; SET MOUSE COORDS - Gets current mousePos and sets the rest with a hard-coded offset
 Numpad0::
@@ -273,56 +280,92 @@ return
 
 ; Sip Anti-Venom potion
 Numpad2::
-    ; BlockInput, On
-    ; Anti-venom Sippy
-    ; BlockInput, Off
+    BlockInput, On
+    antiVenomSippy()
+    BlockInput Off
 return 
 
 ; Tick eat - shark/karambwan combo (up to 4 iterations)
 Numpad3::
-    ; BlockInput, On
+    BlockInput, On
     ; Tick Eat
-    ; BlockInput, Off
+    BlockInput, Off
 return
 
 ; MAGIC GEAR | Prot Range (Melee/Range form)
 Numpad4::
-    ; BlockInput, On
-    ProtRange()
-    ; BlockInput, Off
+    BlockInput, On
+    ProtMage()
+    BlockInput, Off
 return 
 
 ; Pray Rigour (with Range gear against Magic attacks)
 Numpad5::
-    ; BlockInput, On
-    PrayAug()
-    ; BlockInput, Off
+    BlockInput, On
+    PrayRig()
+    BlockInput, Off
 return
 
 ; Switch to Range Gear (against Magic attacks with Rigour pray)
 Numpad6::
-    ; BlockInput, On
+    BlockInput, On
     switchToRangeGear()
-    ; BlockInput, Off
+    BlockInput, Off
 return
 
 ; Protect Magic
 Numpad7::
-    ; BlockInput, On
-    ProtMage()
-    ; BlockInput, Off
+    BlockInput, On
+    ProtRange()
+    BlockInput, Off
 return 
 
 ; Pray Augory (with Magic gear against Range attacks)
 Numpad8::
-    ; BlockInput, On
-    PrayRig()
-    ; BlockInput, Off
+    BlockInput, On
+    PrayAug()
+    BlockInput, Off
 return
 
 ; Switch to Mage Gear (against Range attacks with Aug pray)
 Numpad9::
-    ; BlockInput, On
+    BlockInput, On
     switchToMagicGear()
-    ; BlockInput, Off
+    BlockInput, Off
+return
+
+NumpadAdd::
+    BlockInput, On
+    randomVariances := RandomizeVariance()
+    rMoveSpeed := randomVariances["rMouseSpeedVar"]
+    rCoordVar := randomVariances["rMouseCoordVar"]
+
+    ; Store starting mouse Pos. to return it after
+    MouseGetPos, startingPosX, startingPosY
+
+    ProtRange()
+    PrayAug()
+    switchToMagicGear()
+
+    MouseMove, startingPosX, startingPosY, rMoveSpeed
+    BlockInput, Off
+
+return
+
+NumpadEnter::
+    BlockInput, On
+    randomVariances := RandomizeVariance()
+    rMoveSpeed := randomVariances["rMouseSpeedVar"]
+    rCoordVar := randomVariances["rMouseCoordVar"]
+
+    ; Store starting mouse Pos. to return it after
+    MouseGetPos, startingPosX, startingPosY
+
+    ProtMage()
+    PrayRig()
+    switchToRangeGear()
+
+    MouseMove, startingPosX, startingPosY, rMoveSpeed
+    BlockInput, Off
+
 return
